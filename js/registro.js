@@ -3,6 +3,7 @@ document.querySelector("form").addEventListener("submit", function(e) {
 
     const nombre = document.getElementById("nombre").value.trim();
     const email = document.getElementById("email-registro").value.trim();
+    const telefono = document.getElementById("telefono-registro").value.trim();
     const password = document.getElementById("password-registro").value;
     const confirmarPassword = document.getElementById("confirmar-password").value;
     const terminos = document.getElementById("terminos").checked;
@@ -28,7 +29,7 @@ document.querySelector("form").addEventListener("submit", function(e) {
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"
         },
-        body: `nombre=${encodeURIComponent(nombre)}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+        body: `nombre=${encodeURIComponent(nombre)}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}&telefono=${encodeURIComponent(telefono)}`
     })
     .then(res => res.text())
     .then(data => {
@@ -45,6 +46,9 @@ document.querySelector("form").addEventListener("submit", function(e) {
                 break;
             case "CAMPOS_VACIOS":
                 alert("Completa todos los campos.");
+                break;
+            case "DATOS_INCOMPLETOS":
+                alert("Faltan datos requeridos.");
                 break;
             default:
                 alert("Error en el registro: " + data);
