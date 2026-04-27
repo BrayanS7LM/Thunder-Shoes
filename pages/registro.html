@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/registro.css">
+    <title>THUNDER SHOES</title>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="../imagenes/Thunder..JPG" alt="Logo de la empresa" style="height: 50px;">
+            </div>
+            <div class="titulo">THUNDER SHOES</div>
+            <ul class="nav-links">
+                <li><a class="link" href="../pages/registro.html">Registrarse</a></li>
+                <li><a class="link" href="../pages/login.html">Login</a></li>
+                <li><a href="#ayuda">Ayuda</a></li>
+                <li class="carrito-li">
+                    <div class="carrito-container" id="carrito">
+                        <a href="#carrito">
+                            <div class="carrito-icon">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                            <div class="contador-items">0</div>
+                        </a>
+                        <div class="carrito-dropdown">
+                            <h3>Tu carrito</h3>
+                            <div class="carrito-items">
+                                <div class="carrito-vacio">Tu carrito está vacío</div>
+                            </div>
+                            <div class="carrito-total">
+                                <span>Total:</span>
+                                <span>$0</span>
+                            </div>
+                            <button class="boton-checkout">Finalizar compra</button>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="form-container" id="registro">
+        <h2>Crear una cuenta</h2>
+        <form>
+            <div class="input-group">
+                <label for="nombre">Nombre completo</label>
+                <input type="text" id="nombre" name="nombre" placeholder="Ingresa tu nombre completo" required>
+                <i class="fas fa-user icon"></i>
+            </div>
+
+            <div class="input-group">
+                <label for="email-registro">Correo electrónico</label>
+                <input type="email" id="email-registro" name="email" placeholder="ejemplo@correo.com" required>
+                <i class="fas fa-envelope icon"></i>
+            </div>
+
+            <div class="input-group">
+                <label for="password-registro">Contraseña</label>
+                <input type="password" id="password-registro" name="password" placeholder="Mínimo 8 caracteres" required>
+                <i class="fas fa-lock icon"></i>
+            </div>
+
+            <div class="input-group">
+                <label for="confirmar-password">Confirmar contraseña</label>
+                <input type="password" id="confirmar-password" name="confirmar-password" placeholder="Repite tu contraseña" required>
+                <i class="fas fa-lock icon"></i>
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="terminos" name="terminos">
+                <label for="terminos">Acepto los términos y condiciones</label>
+            </div>
+
+            <button type="submit" class="btn">Registrarme</button>
+
+            <div class="form-footer">
+                ¿Ya tienes una cuenta? <a href="login.html">Iniciar sesión</a>
+            </div>
+        </form>
+    </div>
+
+    <script src="../js/registro.js"></script>
+</body>
+</html>
+ 

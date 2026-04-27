@@ -1,0 +1,390 @@
+/* Restablecer márgenes y rellenos para todos los elementos */
+* {
+    margin: 0; /* Eliminar márgenes */
+    padding: 0; /* Eliminar rellenos */
+    box-sizing: border-box; /* Usar el modelo de caja para todos los elementos */
+}
+
+/* Estilo básico del cuerpo */
+body, p {
+    font-family: "Roboto Serif", serif; /* Fuente por defecto */
+    font-size: 20px;
+    background-color: #ffff; /* Fondo de la página web */
+    color: black;
+}
+
+h1 {
+    text-align: center; /* Titulos centrados */
+    font-size: 25px;
+}
+
+/* Estilo de la cabecera */
+/* Estilos para el header y navegación */
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    background-color: #011526;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 5%;
+    max-width: 1400px;
+    margin: 0 auto;
+    color: white;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    height: 50px;
+    margin-right: 15px;
+}
+
+.titulo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #fff;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    align-items: center;
+    margin-left: auto;
+}
+
+.nav-links li {
+    margin: 0 15px;
+    position: relative;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: 500;
+    transition: color 0.3s;
+    font-size: 0.95rem;
+    display: block;
+    padding: 8px 0;
+}
+
+.nav-links a:hover {
+    color: #f0c040;
+}
+
+/* Estilos específicos para el carrito */
+.carrito-li {
+    position: relative;
+    margin-left: 20px !important;
+}
+
+.carrito-container {
+    position: relative;
+    cursor: pointer;
+}
+
+.carrito-icon {
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+.carrito-icon i {
+    transition: transform 0.3s;
+}
+
+.carrito-container:hover .carrito-icon i {
+    transform: scale(1.1);
+}
+
+.contador-items {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #ff6b6b;
+    color: white;
+    font-size: 0.7rem;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+.carrito-dropdown {
+    position: absolute;
+    right: 0;
+    top: 150%;
+    width: 320px;
+    background-color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    padding: 15px;
+    display: none;
+    z-index: 1000;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.carrito-dropdown:before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    right: 15px;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid white;
+}
+
+/* Mostrar el dropdown al hacer hover o cuando esté activo */
+.carrito-container:hover .carrito-dropdown,
+.carrito-container.active .carrito-dropdown {
+    display: block;
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.carrito-dropdown h3 {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.carrito-items {
+    max-height: 250px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+}
+
+.carrito-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.item-info {
+    flex: 1;
+}
+
+.item-nombre {
+    font-weight: 500;
+    margin-bottom: 3px;
+}
+
+.item-precio {
+    color: #ff6b6b;
+    font-weight: 600;
+}
+
+.eliminar-item {
+    background: none;
+    border: none;
+    color: #ccc;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.eliminar-item:hover {
+    color: #ff6b6b;
+}
+
+.carrito-vacio {
+    text-align: center;
+    color: #999;
+    padding: 15px 0;
+    font-style: italic;
+}
+
+.carrito-total {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    margin: 15px 0;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+    font-size: 1.1rem;
+}
+
+.boton-checkout {
+    width: 100%;
+    padding: 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.boton-checkout:hover {
+    background-color: #45a049;
+}
+
+/* Media query para dispositivos móviles */
+@media screen and (max-width: 768px) {
+    nav {
+        flex-wrap: wrap;
+        justify-content: space-between;
+        padding: 10px 15px;
+    }
+    
+    .titulo {
+        font-size: 1.2rem;
+    }
+    
+    .nav-links {
+        order: 3;
+        width: 100%;
+        margin-top: 15px;
+        justify-content: space-around;
+    }
+    
+    .nav-links li {
+        margin: 0 5px;
+    }
+    
+    .nav-links a {
+        font-size: 0.85rem;
+        padding: 5px;
+    }
+    
+    .carrito-dropdown {
+        width: 280px;
+        right: -70px; /* Ajustar posición para centrar en móviles */
+    }
+    
+    .carrito-li {
+        margin-top: 0;
+    }
+}
+
+/* Titulo de la pagina */
+.titulo {
+    align-content: center;
+    display: center;
+    justify-self: center;
+    font-size: 30px; /* Tamaño de fuente grande */
+    font-weight: bold; /* Texto en negrita */
+    margin-left: auto;
+    margin-right: auto;
+    align-items: center;
+}
+
+.container {
+    text-align: center;
+    margin-left: 200px;
+    margin-right: 200px;
+    justify-items: auto;
+}
+
+section {
+    margin-left: 200px;
+    margin-right: 200px;
+    justify-items: auto;
+    text-align: justify;
+}
+
+
+    .titulo {
+        font-size: 24px;
+    }
+  /* Formulario */
+  
+  main {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+  }
+  
+  .form-inicio-sesion {
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .form-inicio-sesion h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #011526;
+  }
+  
+  .input-group {
+    margin-bottom: 20px;
+  }
+  
+  .input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .input-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+  
+  .botones {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  
+  .btn {
+    background-color: #011526;
+    color: white;
+    font-size: 15px;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-decoration: none;
+  }
+  
+  .btn:hover {
+    background-color: #02293d;
+  }
+  
+  .btn.secundario {
+    background-color: #6c757d;
+  }
+  
+  .btn.secundario:hover {
+    background-color: #5a6268;
+  }
+  

@@ -1,0 +1,622 @@
+/* Restablecer márgenes y rellenos para todos los elementos */
+* {
+    margin: 0; /* Eliminar márgenes */
+    padding: 0; /* Eliminar rellenos */
+    box-sizing: border-box; /* Usar el modelo de caja para todos los elementos */
+}
+
+/* Estilo básico del cuerpo */
+body, p {
+    font-family: "Roboto Serif", serif; /* Fuente por defecto */
+    font-size: 20px;
+    background-color: #ffff; /* Fondo de la página web */
+    color: black;
+}
+
+h1 {
+    text-align: center; /* Titulos centrados */
+    font-size: 25px;
+}
+
+/* Estilo de la cabecera */
+/* Estilos para el header y navegación */
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    background-color: #011526;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 5%;
+    max-width: 1400px;
+    margin: 0 auto;
+    color: white;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    height: 50px;
+    margin-right: 15px;
+}
+
+.titulo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #fff;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    align-items: center;
+    margin-left: auto;
+}
+
+.nav-links li {
+    margin: 0 15px;
+    position: relative;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: 500;
+    transition: color 0.3s;
+    font-size: 0.95rem;
+    display: block;
+    padding: 8px 0;
+}
+
+.nav-links a:hover {
+    color: #f0c040;
+}
+
+/* Estilos específicos para el carrito */
+.carrito-li {
+    position: relative;
+    margin-left: 20px !important;
+}
+
+.carrito-container {
+    position: relative;
+    cursor: pointer;
+}
+
+.carrito-icon {
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+.carrito-icon i {
+    transition: transform 0.3s;
+}
+
+.carrito-container:hover .carrito-icon i {
+    transform: scale(1.1);
+}
+
+.contador-items {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #ff6b6b;
+    color: white;
+    font-size: 0.7rem;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+.carrito-dropdown {
+    position: absolute;
+    right: 0;
+    top: 150%;
+    width: 320px;
+    background-color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    padding: 15px;
+    display: none;
+    z-index: 1000;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.carrito-dropdown:before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    right: 15px;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid white;
+}
+
+/* Mostrar el dropdown al hacer hover o cuando esté activo */
+.carrito-container:hover .carrito-dropdown,
+.carrito-container.active .carrito-dropdown {
+    display: block;
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.carrito-dropdown h3 {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.carrito-items {
+    max-height: 250px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+}
+
+.carrito-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.item-info {
+    flex: 1;
+}
+
+.item-nombre {
+    font-weight: 500;
+    margin-bottom: 3px;
+}
+
+.item-precio {
+    color: #ff6b6b;
+    font-weight: 600;
+}
+
+.eliminar-item {
+    background: none;
+    border: none;
+    color: #ccc;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.eliminar-item:hover {
+    color: #ff6b6b;
+}
+
+.carrito-vacio {
+    text-align: center;
+    color: #999;
+    padding: 15px 0;
+    font-style: italic;
+}
+
+.carrito-total {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    margin: 15px 0;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+    font-size: 1.1rem;
+}
+
+.boton-checkout {
+    width: 100%;
+    padding: 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.boton-checkout:hover {
+    background-color: #45a049;
+}
+
+/* Media query para dispositivos móviles */
+@media screen and (max-width: 768px) {
+    nav {
+        flex-wrap: wrap;
+        justify-content: space-between;
+        padding: 10px 15px;
+    }
+    
+    .titulo {
+        font-size: 1.2rem;
+    }
+    
+    .nav-links {
+        order: 3;
+        width: 100%;
+        margin-top: 15px;
+        justify-content: space-around;
+    }
+    
+    .nav-links li {
+        margin: 0 5px;
+    }
+    
+    .nav-links a {
+        font-size: 0.85rem;
+        padding: 5px;
+    }
+    
+    .carrito-dropdown {
+        width: 280px;
+        right: -70px; /* Ajustar posición para centrar en móviles */
+    }
+    
+    .carrito-li {
+        margin-top: 0;
+    }
+}
+
+/* Titulo de la pagina */
+.titulo {
+    align-content: center;
+    display: center;
+    justify-self: center;
+    font-size: 30px; /* Tamaño de fuente grande */
+    font-weight: bold; /* Texto en negrita */
+    margin-left: auto;
+    margin-right: auto;
+    align-items: center;
+}
+
+.container {
+    text-align: center;
+    margin-left: 200px;
+    margin-right: 200px;
+    justify-items: auto;
+}
+
+section {
+    margin-left: 200px;
+    margin-right: 200px;
+    justify-items: auto;
+    text-align: justify;
+}
+
+
+    .titulo {
+        font-size: 24px;
+    }
+    .footer-links {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    form {
+        width: 100%;
+    }
+.slider-box {
+    width: 50%;
+    height: auto;
+    position: relative;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+.slider-box ul {
+    display: flex;
+    padding: 0;
+    margin: 0;
+    width: 500%; /* 5 imágenes (4 originales + 1 clon) */
+    animation: slide 16s infinite linear;
+    /* Eliminar cualquier espacio predeterminado */
+    font-size: 0; /* Elimina espacios en blanco entre elementos inline-block */
+}
+
+.slider-box li {
+    width: 20%; /* Cada elemento ocupa 1/5 del ancho total */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0; /* Elimina cualquier espacio causado por el tamaño de fuente */
+    line-height: 0; /* Elimina cualquier espacio vertical */
+}
+
+.slider-box img {
+    display: block; /* Elimina el espacio inferior entre imágenes */
+    width: 100%;
+    height: 100%; /* Asegura que la imagen ocupe todo el alto disponible */
+    object-fit: cover; /* Mantiene la proporción de la imagen sin distorsionarla */
+}
+
+@keyframes slide {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-80%); } /* Mueve exactamente 4 imágenes */
+}
+/* Estilo general del contenedor */
+.content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columnas de igual tamaño */
+    grid-template-rows: repeat(2, auto); /* 2 filas, altura automática */
+    gap: 20px; /* Espacio uniforme entre elementos */
+    padding: 20px;
+    max-width: 1200px; /* Ancho máximo del contenedor */
+    margin: 0 auto; /* Centrar en la página */
+}
+
+/* Cada galería individual */
+div.galeria {
+    background-color: #B5D7FF;
+    box-sizing: border-box;
+    border: none;
+    width: 100%; /* Ocupará el 100% del espacio de su celda en la grid */
+    border-radius: 8px; /* Bordes redondeados */
+    overflow: hidden; /* Para que la imagen no sobresalga al agrandarse */
+    transition: all 0.3s ease; /* Transición suave para todos los efectos */
+    position: relative; /* Para el posicionamiento de elementos internos */
+}
+
+/* Efecto al pasar el cursor sobre la galería */
+div.galeria:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); /* Sombra mejorada */
+    transform: translateY(-5px); /* Efecto de elevación */
+}
+
+/* Contenedor de la imagen para controlar el overflow */
+div.galeria .img-container {
+    overflow: hidden;
+    width: 100%;
+}
+
+/* Estilo de las imágenes */
+div.galeria img {
+    width: 100%;
+    height: auto;
+    transition: transform 0.5s ease; /* Transición solo para la transformación */
+    display: block; /* Elimina espacio extra debajo de la imagen */
+}
+
+/* Efecto de agrandamiento al pasar el cursor sobre la imagen */
+div.galeria:hover img {
+    transform: scale(1.1); /* Agranda la imagen un 10% */
+}
+
+/* Estilo para las descripciones */
+div.desc {
+    padding: 15px;
+    text-align: justify;
+    color: #333; /* Cambié el color para mejor contraste */
+    font-size: 16px;
+    line-height: 1.4;
+}
+
+/* Estilo para las listas */
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0 15px 15px;
+}
+
+li {
+    margin-bottom: 8px;
+    position: relative;
+    padding-left: 15px;
+}
+
+
+/* Estilo para botones */
+.boton {
+    display: inline-block;
+    background-color: #0AE823; /* Color base del botón */
+    color: white;
+    padding: 10px 20px;
+    margin: 15px;
+    border: none;
+    border-radius: 4px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.boton:hover {
+    background-color: #3a5c9a; /* Color más oscuro al pasar el cursor */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px); /* Ligero efecto de elevación */
+}
+
+/* Estilo para dispositivos móviles */
+@media screen and (max-width: 992px) {
+    .content {
+        grid-template-columns: repeat(2, 1fr); /* 2 columnas en tablets */
+        padding: 15px;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .content {
+        grid-template-columns: 1fr; /* 1 columna en móviles */
+        padding: 10px;
+    }
+}
+/* Contenedor que rodea el formulario */
+#contacto {
+    background: linear-gradient(
+        180deg,
+        rgba(37, 34, 63, 1) 0%,
+        rgba(31, 61, 98, 1) 50%,
+        rgba(35, 40, 72, 1) 100%
+    ); /* Fondo del formulario */
+    max-width: 74%;
+    margin: 0 auto;
+    display: flex;
+    align-content: center;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    min-height: 20vh; /* Asegura que el contenedor ocupe al menos el alto de la ventana */
+}
+
+.contacto {
+    text-align: center;
+}
+
+.form-container h2 {
+    font-size: 40px;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.form-container {
+    font-size: 18px;
+    color: white;
+    margin-bottom: 10px;
+}
+
+form {
+    padding: 10px;
+    border-radius: 15px;
+    width: 800px;
+    height: auto;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    display: flex;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 40px;
+    margin-bottom: 30px;
+}
+
+.form-content {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    color: white;
+    font-size: 15px;
+    margin-bottom: 30px;
+}
+
+input, textarea {
+    padding: 20px 50px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    background-color: #011526;
+    border: 2px solid #20638C;
+    color: white;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+input::placeholder, textarea::placeholder {
+    color: white;
+}
+
+.form-text {
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+}
+
+.form-text a {
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.btn {
+    width: auto;
+    display: inline-flex;
+    padding: 15px 30px;
+    font-size: 16px;
+    color: white;
+    border-radius: 25px;
+    background-color: #012840;
+    box-shadow: 0 0 20px #20638C;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn:hover {
+    background-color: #20638C;
+}
+
+.btn:active {
+    transform: scale(1.05);
+}
+.footer {
+    margin-top: 30px;
+    background-color:#011526;
+    padding: 20px 0;
+}
+.footer-row {
+    background-color: #011526;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.footer-links {
+    width: 25%; /* Ajusta el ancho según sea necesario */
+    padding: 0 15px;
+}
+
+.footer-links h4 {
+    font-size: 20px;
+    color: white;
+    margin-bottom: 25px;
+    font-weight: 500;
+    border-bottom: 2px solid #20638C;
+    padding-bottom: 10px;
+}
+
+.footer-links a {
+    font-size: 18px;
+    text-decoration: none;
+    color: #BBBBBB;
+    display: block;
+    margin-bottom: 15px;
+    transition: all .3s ease;
+}
+.footer-links ul li a:hover{
+    color:#FFFFFF;
+    padding-left: 6PX;
+}
