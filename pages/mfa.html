@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>THUNDER SHOES - Verificación MFA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/login.css">
+</head>
+<body>
+
+  <header>
+    <nav>
+      <div class="logo">
+        <img src="../imagenes/Thunder..JPG" alt="Logo" style="height: 50px;">
+      </div>
+      <div class="titulo">THUNDER SHOES</div>
+    </nav>
+  </header>
+
+  <main>
+    <form class="form-inicio-sesion" id="form-mfa">
+      <h2>VERIFICACIÓN DE SEGURIDAD</h2>
+      <p style="text-align:center; margin-bottom: 20px;">
+        Abre Google Authenticator e ingresa el código de 6 dígitos.
+      </p>
+      <div class="input-group">
+        <label for="codigo-mfa">Código de verificación</label>
+        <input 
+          type="text" 
+          id="codigo-mfa" 
+          maxlength="6" 
+          placeholder="Ej: 123456"
+          autocomplete="off"
+          required
+        >
+      </div>
+      <div class="botones">
+        <button type="submit" class="btn">Verificar</button>
+        <a href="../pages/login.html" class="btn secundario">Cancelar</a>
+      </div>
+      <p id="mfa-error" style="color:red; text-align:center; display:none;">
+        Código incorrecto. Intenta de nuevo.
+      </p>
+    </form>
+  </main>
+
+  <script src="../js/mfa.js"></script>
+</body>
+</html>

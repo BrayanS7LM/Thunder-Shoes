@@ -1,0 +1,19 @@
+{
+    "name": "brayan/thunder-shoes",
+    "description": "Proyecto Thunder Shoes, 2MF",
+    "autoload": {
+        "psr-4": {
+            "Brayan\\ThunderShoes\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "BrayanS7LM",
+            "email": "brayanstevenlancherosmartinez@gmail.com"
+        }
+    ],
+    "require": {
+        "pragmarx/google2fa": "^9.0",
+        "bacon/bacon-qr-code": "^3.1"
+    }
+}

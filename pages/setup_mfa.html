@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>THUNDER SHOES - Activar MFA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/login.css">
+</head>
+<body>
+
+  <header>
+    <nav>
+      <div class="logo">
+        <img src="../imagenes/Thunder..JPG" alt="Logo" style="height: 50px;">
+      </div>
+      <div class="titulo">THUNDER SHOES</div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="form-inicio-sesion">
+      <h2>ACTIVAR AUTENTICACIÓN MFA</h2>
+
+      <!-- Paso 1: ingresar ID del usuario -->
+      <div id="paso-1">
+        <p style="text-align:center; margin-bottom: 20px;">
+          Ingresa el ID del usuario para vincular Google Authenticator.
+        </p>
+        <div class="input-group">
+          <label for="usuario-id">ID del usuario</label>
+          <input type="number" id="usuario-id" placeholder="Ej: 1" required>
+        </div>
+        <div class="botones">
+          <button class="btn" onclick="activarMFA()">Generar QR</button>
+        </div>
+        <p id="error-msg" style="color:red; text-align:center; display:none;">
+          Ocurrió un error. Verifica el ID del usuario.
+        </p>
+      </div>
+
+      <!-- Paso 2: mostrar QR para escanear -->
+      <div id="paso-2" style="display:none; text-align:center;">
+        <p style="margin-bottom: 15px;">
+          Escanea este QR con <strong>Google Authenticator</strong>:
+        </p>
+        <div id="qr-container" style="margin: 0 auto 20px auto;"></div>
+        <p style="font-size: 13px; color: #666;">
+          ¿No puedes escanear? Ingresa este código manualmente en la app:
+        </p>
+        <p id="secret-text" style="
+          font-weight: bold; 
+          letter-spacing: 3px; 
+          font-size: 18px;
+          margin: 10px 0 20px 0;
+        "></p>
+        <p style="font-size: 13px; color: #666; margin-bottom: 20px;">
+          Una vez escaneado, ya puedes ir al login.
+        </p>
+        <div class="botones">
+          <a href="../pages/login.html" class="btn">Ir al Login</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="../js/setup_mfa.js"></script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 document.querySelector(".form-inicio-sesion").addEventListener("submit", function(e) {
     e.preventDefault();
 
-    const email = document.getElementById("email-registro").value.trim();
+    const email    = document.getElementById("email-registro").value.trim();
     const password = document.getElementById("password-registro").value;
 
     fetch("/PAGINA_WEB/php/login.php", {
@@ -16,6 +16,11 @@ document.querySelector(".form-inicio-sesion").addEventListener("submit", functio
             localStorage.setItem("usuarioActivo", nombre);
             alert("¡Bienvenido, " + nombre + "!");
             window.location.href = "../pages/cliente.html";
+
+        } else if (data === "MFA_REQUERIDO") {
+            // 👉 Redirigir a la pantalla del código MFA
+            window.location.href = "../pages/mfa.html";
+
         } else if (data === "NO_EXISTE" || data === "PASSWORD_INCORRECTO") {
             alert("Correo o contraseña incorrectos.");
         } else {
