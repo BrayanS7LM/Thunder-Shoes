@@ -35,8 +35,8 @@ document.querySelector("form").addEventListener("submit", function(e) {
     .then(data => {
         switch(data.trim()) {
             case "OK":
-                alert("Registro exitoso. Ahora puedes iniciar sesión.");
-                window.location.href = "login.html";
+                // ✅ Ir a vincular Google Authenticator antes del login
+                window.location.href = "setup_mfa.html";
                 break;
             case "EXISTE":
                 alert("Este correo ya está registrado.");

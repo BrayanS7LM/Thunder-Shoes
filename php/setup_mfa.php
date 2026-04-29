@@ -9,17 +9,18 @@ use BaconQrCode\Renderer\Image\SvgImageBackEnd;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 use BaconQrCode\Writer;
 
-$usuario_id = $_POST['usuario_id'] ?? null;
-
-if (!$usuario_id) {
-    echo json_encode(['error' => 'DATOS_INCOMPLETOS']);
+if (!isset($_SESSION['autenticado']) || !$_SESSION['autenticado']) {
+    http_response_code(403);
+    echo json_encode(['error' => 'NO_AUTORIZADO']);
     exit;
 }
+
+$usuario_id = $_SESSION['usuario_id'];
 
 $stmt = $conexion->prepare("SELECT email FROM Usuario WHERE id_usuario = ?");
 $stmt->bind_param("i", $usuario_id);
 $stmt->execute();
-$result = $stmt->get_result();
+$result  = $stmt->get_result();
 $usuario = $result->fetch_assoc();
 
 if (!$usuario) {
