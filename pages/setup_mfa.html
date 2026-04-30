@@ -21,27 +21,39 @@
 
   <main>
     <div class="form-inicio-sesion">
-      <h2>ACTIVAR AUTENTICACIÓN MFA</h2>
 
-      <!-- Paso 1: ingresar ID del usuario -->
-      <div id="paso-1">
-        <p style="text-align:center; margin-bottom: 20px;">
-          Ingresa el ID del usuario para vincular Google Authenticator.
-        </p>
-        <div class="input-group">
-          <label for="usuario-id">ID del usuario</label>
-          <input type="number" id="usuario-id" placeholder="Ej: 1" required>
-        </div>
-        <div class="botones">
-          <button class="btn" onclick="activarMFA()">Generar QR</button>
-        </div>
-        <p id="error-msg" style="color:red; text-align:center; display:none;">
-          Ocurrió un error. Verifica el ID del usuario.
-        </p>
+      <!-- Estado: cargando (verificando sesión) -->
+      <div id="paso-cargando" style="text-align:center;">
+        <h2>CARGANDO...</h2>
+        <p>Verificando tu sesión.</p>
       </div>
 
-      <!-- Paso 2: mostrar QR para escanear -->
-      <div id="paso-2" style="display:none; text-align:center;">
+      <!-- Estado: sin sesión, pedir teléfono + contraseña -->
+      <div id="paso-verificacion" style="display:none;">
+        <h2>VERIFICACIÓN DE IDENTIDAD</h2>
+        <p style="text-align:center; margin-bottom: 20px;">
+          Ingresa tus datos para vincular Google Authenticator.
+        </p>
+        <div class="input-group">
+          <label for="telefono-mfa">Número de teléfono</label>
+          <input type="tel" id="telefono-mfa" placeholder="Ej: 3053063639" required>
+        </div>
+        <div class="input-group">
+          <label for="password-mfa">Contraseña</label>
+          <input type="password" id="password-mfa" placeholder="Tu contraseña" required>
+        </div>
+        <p id="error-verificacion" style="color:red; text-align:center; display:none;">
+          Teléfono o contraseña incorrectos.
+        </p>
+        <div class="botones">
+          <button class="btn" onclick="verificarIdentidad()">Verificar</button>
+          <a href="../pages/login.html" class="btn secundario">Cancelar</a>
+        </div>
+      </div>
+
+      <!-- Estado: mostrar QR -->
+      <div id="paso-qr" style="display:none; text-align:center;">
+        <h2>VINCULA TU GOOGLE AUTHENTICATOR</h2>
         <p style="margin-bottom: 15px;">
           Escanea este QR con <strong>Google Authenticator</strong>:
         </p>
@@ -50,14 +62,23 @@
           ¿No puedes escanear? Ingresa este código manualmente en la app:
         </p>
         <p id="secret-text" style="
-          font-weight: bold; 
-          letter-spacing: 3px; 
-          font-size: 18px;
+          font-weight: bold;
+          letter-spacing: 3px;
+          font-size: 16px;
           margin: 10px 0 20px 0;
         "></p>
-        <p style="font-size: 13px; color: #666; margin-bottom: 20px;">
-          Una vez escaneado, ya puedes ir al login.
+        <p style="font-size: 13px; color: #444; margin-bottom: 20px;">
+          Una vez escaneado, haz clic en continuar para iniciar sesión.
         </p>
+        <div class="botones">
+          <a href="../pages/login.html" class="btn">Continuar al Login →</a>
+        </div>
+      </div>
+
+      <!-- Estado: error -->
+      <div id="paso-error" style="display:none; text-align:center;">
+        <h2>ERROR</h2>
+        <p style="color:red;">Ocurrió un error inesperado.</p>
         <div class="botones">
           <a href="../pages/login.html" class="btn">Ir al Login</a>
         </div>
