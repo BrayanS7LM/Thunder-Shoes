@@ -26,7 +26,7 @@ $google2fa = new Google2FA();
 $valido = $google2fa->verifyKey($usuario['mfa_secret'], $codigo);
 
 if ($valido) {
-    // ✅ Limpiar sesión MFA y dar acceso
+    // Limpiar sesión MFA y dar acceso
     unset($_SESSION['mfa_pendiente']);
     echo "OK:" . $usuario['nombre'];
 } else {

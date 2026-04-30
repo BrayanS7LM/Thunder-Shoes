@@ -34,7 +34,7 @@ if (!password_verify($password, $usuario['password'])) {
     exit;
 }
 
-// ✅ Contraseña correcta
+//  Contraseña correcta
 if ($usuario['mfa_habilitado'] && $usuario['mfa_secret']) {
     // Guardar en sesión para usarlo en verify_mfa.php
     $_SESSION['mfa_usuario_id'] = $usuario['id_usuario'];

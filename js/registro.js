@@ -19,6 +19,8 @@ document.querySelector("form").addEventListener("submit", function(e) {
     }
 
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    
     if (!emailPattern.test(email)) {
         alert("Por favor, ingrese un email válido.");
         return;
