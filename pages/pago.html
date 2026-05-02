@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>THUNDER SHOES — Pago seguro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/pago.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <title>THUNDER SHOES</title> <!-- Título pagina web -->
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+    <nav>
+      <a href="/" class="logo">
+  <img src="/imagenes/Logo.png" alt="Logo de la empresa" style="height: 50px;">
+</a>
+      <div class="titulo">THUNDER SHOES</div>
+      <ul class="nav-links">
+          <li><a class="link" href="../pages/registro.html">Registrarse</a></li>
+          <li><a class="link" href="../pages/login.html">Login</a></li>
+          <li><a href="#ayuda">Ayuda</a></li>
+      </ul>
+  </nav>
+</header>
+
+<!-- PAGINA -->
+<div class="page">
+
+  <!-- STEPPER -->
+  <div class="stepper">
+    <div class="step active" id="s1">
+      <div class="step-num">1</div>
+      <div class="step-info">
+        <span class="step-label">Datos de envio</span>
+        <span class="step-sub">Ciudad, direccion, talla</span>
+      </div>
+    </div>
+    <div class="step" id="s2">
+      <div class="step-num">2</div>
+      <div class="step-info">
+        <span class="step-label">Metodo de pago</span>
+        <span class="step-sub">Tarjeta, Nequi, PSE...</span>
+      </div>
+    </div>
+    <div class="step" id="s3">
+      <div class="step-num"><i class="fas fa-check" style="font-size:13px"></i></div>
+      <div class="step-info">
+        <span class="step-label">Confirmacion</span>
+        <span class="step-sub">Pedido generado</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- COLUMNA IZQUIERDA -->
+  <div>
+
+    <!-- FASE 1: ENVIO -->
+    <div class="card phase active" id="fase1">
+      <h2 class="card-title"><i class="fas fa-map-marker-alt"></i>Datos de Envio</h2>
+
+      <div class="err-msg" id="err1">
+        <i class="fas fa-circle-exclamation"></i>
+        <span>Completa todos los campos obligatorios.</span>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group full">
+          <label for="f1-nombre">Nombre completo *</label>
+          <input type="text" id="f1-nombre" placeholder="Tu nombre completo" autocomplete="name">
+        </div>
+        <div class="form-group full">
+          <label for="f1-email">Correo electronico *</label>
+          <input type="email" id="f1-email" placeholder="correo@ejemplo.com" autocomplete="email">
+        </div>
+        <div class="form-group full">
+          <label for="f1-telefono">Telefono</label>
+          <input type="tel" id="f1-telefono" placeholder="300 000 0000" autocomplete="tel">
+        </div>
+        <div class="form-group">
+          <label for="f1-ciudad">Ciudad *</label>
+          <div class="select-wrap">
+            <select id="f1-ciudad">
+              <option value="">Selecciona ciudad</option>
+              <option>Bogota</option><option>Medellin</option><option>Cali</option>
+              <option>Barranquilla</option><option>Bucaramanga</option>
+              <option>Pereira</option><option>Manizales</option><option>Cartagena</option><option>Otra</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="f1-talla">Talla *</label>
+          <div class="select-wrap">
+            <select id="f1-talla">
+              <option value="">Selecciona talla</option>
+              <option>35</option><option>36</option><option>37</option><option>38</option>
+              <option>39</option><option>40</option><option>41</option><option>42</option>
+              <option>43</option><option>44</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group full">
+          <label for="f1-direccion">Direccion de entrega *</label>
+          <input type="text" id="f1-direccion" placeholder="Calle 123 # 45-67, Apto 8" autocomplete="street-address">
+        </div>
+      </div>
+
+      <button class="btn btn-primary" onclick="irFase2()">
+        <i class="fas fa-arrow-right"></i> Continuar al pago
+      </button>
+    </div>
+
+
+    <!-- FASE 2: PAGO -->
+    <div class="card phase" id="fase2">
+      <h2 class="card-title"><i class="fas fa-credit-card"></i>Metodo de Pago</h2>
+
+      <div class="err-msg" id="err2">
+        <i class="fas fa-circle-exclamation"></i>
+        <span>Selecciona un metodo de pago para continuar.</span>
+      </div>
+
+      <div class="metodos-grid">
+        <button class="metodo-btn" data-metodo="tarjeta_credito" onclick="seleccionarMetodo(this)">
+          <i class="fas fa-credit-card"></i>Tarjeta credito
+        </button>
+        <button class="metodo-btn" data-metodo="tarjeta_debito" onclick="seleccionarMetodo(this)">
+          <i class="fas fa-wallet"></i>Tarjeta debito
+        </button>
+        <button class="metodo-btn" data-metodo="nequi" onclick="seleccionarMetodo(this)">
+          <i class="fas fa-mobile-alt"></i>Nequi
+        </button>
+        <button class="metodo-btn" data-metodo="pse" onclick="seleccionarMetodo(this)">
+          <i class="fas fa-university"></i>PSE
+        </button>
+        <button class="metodo-btn" data-metodo="efecty" onclick="seleccionarMetodo(this)">
+          <i class="fas fa-money-bill-wave"></i>Efecty
+        </button>
+      </div>
+
+      <!-- Tarjeta -->
+      <div id="form-tarjeta" style="display:none">
+        <div class="card-visual">
+          <div class="card-chip"></div>
+          <div class="card-num" id="vis-num">.... .... .... ....</div>
+          <div class="card-meta">
+            <div class="card-meta-group">
+              <span class="card-meta-label">Titular</span>
+              <span class="card-meta-value" id="vis-nombre">NOMBRE APELLIDO</span>
+            </div>
+            <div class="card-meta-group" style="text-align:right">
+              <span class="card-meta-label">Vence</span>
+              <span class="card-meta-value" id="vis-exp">MM/AA</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group full">
+            <label>Numero de tarjeta</label>
+            <input type="text" id="t-num" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatCardNum(this)" autocomplete="cc-number">
+          </div>
+          <div class="form-group full">
+            <label>Titular</label>
+            <input type="text" id="t-nombre" placeholder="Como aparece en la tarjeta"
+              oninput="document.getElementById('vis-nombre').textContent=this.value.toUpperCase()||'NOMBRE APELLIDO'" autocomplete="cc-name">
+          </div>
+          <div class="form-group">
+            <label>Vencimiento</label>
+            <input type="text" id="t-exp" placeholder="MM/AA" maxlength="5" oninput="formatExp(this)" autocomplete="cc-exp">
+          </div>
+          <div class="form-group">
+            <label>CVV</label>
+            <input type="password" id="t-cvv" placeholder="***" maxlength="4" autocomplete="cc-csc">
+          </div>
+          <div class="form-group full">
+            <label>Cuotas</label>
+            <div class="select-wrap">
+              <select id="t-cuotas">
+                <option value="1">1 cuota (sin interes)</option>
+                <option value="3">3 cuotas</option>
+                <option value="6">6 cuotas</option>
+                <option value="12">12 cuotas</option>
+                <option value="24">24 cuotas</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nequi -->
+      <div id="form-nequi" style="display:none">
+        <div class="form-group">
+          <label>Numero de celular Nequi</label>
+          <input type="tel" id="nequi-num" placeholder="300 000 0000">
+        </div>
+        <div class="info-box">
+          <i class="fas fa-bell"></i> Recibiras una <strong>notificacion push</strong> en tu app Nequi para aprobar el pago.
+        </div>
+      </div>
+
+      <!-- PSE -->
+      <div id="form-pse" style="display:none">
+        <div class="form-group">
+          <label>Banco</label>
+          <div class="select-wrap">
+            <select id="pse-banco">
+              <option value="">Selecciona tu banco</option>
+              <option>Bancolombia</option><option>Banco de Bogota</option>
+              <option>Davivienda</option><option>BBVA Colombia</option>
+              <option>Banco Agrario</option><option>Otro</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Tipo de persona</label>
+            <div class="select-wrap">
+              <select id="pse-tipo"><option value="natural">Natural</option><option value="juridica">Juridica</option></select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Tipo documento</label>
+            <div class="select-wrap">
+              <select id="pse-doc"><option value="CC">Cedula CC</option><option value="NIT">NIT</option><option value="CE">C. Extranjeria</option></select>
+            </div>
+          </div>
+          <div class="form-group full">
+            <label>Numero documento</label>
+            <input type="text" id="pse-num" placeholder="1000000000">
+          </div>
+        </div>
+        <div class="info-box">
+          <i class="fas fa-external-link-alt"></i> Seras <strong>redirigido al portal de tu banco</strong> para completar el pago de forma segura.
+        </div>
+      </div>
+
+      <!-- Efecty -->
+      <div id="form-efecty" style="display:none">
+        <div class="info-box">
+          <i class="fas fa-store"></i> Se generara un <strong>codigo unico</strong>. Presentalo en cualquier punto Efecty.
+          Tienes <strong>24 horas</strong> para pagar o el pedido sera cancelado.
+        </div>
+      </div>
+
+      <button class="btn btn-primary" onclick="procesarPago()" style="margin-top:22px">
+        <i class="fas fa-lock"></i> Pagar ahora — <span id="btn-total-label">$0</span>
+      </button>
+      <button class="btn btn-outline" onclick="irFase1()">
+        <i class="fas fa-chevron-left"></i> Volver
+      </button>
+    </div>
+
+
+    <!-- LOADER -->
+    <div class="card loader" id="loader">
+      <div class="loader-ring"></div>
+      <p class="loader-msg" id="loader-msg">Procesando tu pago de forma segura...</p>
+    </div>
+
+
+    <!-- FASE 3: CONFIRMACION -->
+    <div class="card phase" id="fase3">
+      <div class="confirm-wrapper">
+        <div class="confirm-check"><i class="fas fa-check"></i></div>
+        <div class="confirm-title">Pedido Confirmado!</div>
+        <div class="confirm-sub">Tu pago fue procesado exitosamente. Recibiras un correo de confirmacion.</div>
+        <div class="confirm-table">
+          <div class="confirm-row"><span class="lbl">Referencia</span><span class="val ref" id="conf-ref">-</span></div>
+          <div class="confirm-row"><span class="lbl">Nombre</span><span class="val" id="conf-nombre">-</span></div>
+          <div class="confirm-row"><span class="lbl">Entrega</span><span class="val" id="conf-dir">-</span></div>
+          <div class="confirm-row"><span class="lbl">Metodo</span><span class="val" id="conf-metodo">-</span></div>
+          <div class="confirm-row"><span class="lbl">Total pagado</span><span class="val total-amt" id="conf-total">-</span></div>
+        </div>
+        <button class="btn btn-primary" onclick="window.location.href='../pages/cliente.html'" style="margin-top:26px">
+          <i class="fas fa-bag-shopping"></i> Seguir comprando
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /columna izquierda -->
+
+
+  <!-- RESUMEN LATERAL -->
+  <aside class="resumen-sticky">
+    <div class="card">
+      <p class="resumen-title"><i class="fas fa-bag-shopping"></i> Tu Pedido</p>
+      <div id="lista-items">
+        <p style="color:var(--muted);font-size:14px">Cargando carrito...</p>
+      </div>
+      <div class="total-rows">
+        <div class="total-row"><span class="lbl">Subtotal</span><span class="val" id="res-subtotal">$0</span></div>
+        <div class="total-row envio"><span class="lbl">Envio</span><span class="val"><i class="fas fa-check-circle"></i> Gratis</span></div>
+        <div class="grand-row"><span class="lbl">Total</span><span class="val" id="res-total">$0</span></div>
+      </div>
+      <div class="garantia">
+        <i class="fas fa-shield-halved"></i>
+        <span>Compra protegida. Si no recibes tu pedido, te devolvemos el dinero.</span>
+      </div>
+    </div>
+  </aside>
+
+</div><!-- /page -->
+
+<script src="../js/pago.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    setTimeout(function () {
+      var label = document.getElementById('btn-total-label');
+      var total = document.getElementById('res-total');
+      if (label && total) label.textContent = total.textContent;
+    }, 120);
+  });
+</script>
+
+</body>
+</html>
