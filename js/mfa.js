@@ -3,7 +3,7 @@ document.getElementById("form-mfa").addEventListener("submit", function(e) {
 
     const codigo = document.getElementById("codigo-mfa").value.trim();
 
-    fetch("/PAGINA_WEB/php/verify_mfa.php", {
+    fetch("/php/verify_mfa.php", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: `codigo=${encodeURIComponent(codigo)}`

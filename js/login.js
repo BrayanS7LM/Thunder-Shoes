@@ -4,7 +4,7 @@ document.querySelector(".form-inicio-sesion").addEventListener("submit", functio
     const email    = document.getElementById("email-registro").value.trim();
     const password = document.getElementById("password-registro").value;
 
-    fetch("/PAGINA_WEB/php/login.php", {
+    fetch("/php/login.php", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: `email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`

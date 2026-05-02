@@ -1,7 +1,7 @@
 // Al cargar la página, verificar si hay sesión activa
 async function init() {
     try {
-        const res  = await fetch("/PAGINA_WEB/php/check_sesion.php");
+        const res  = await fetch("/php/check_sesion.php");
         const data = await res.text();
 
         document.getElementById("paso-cargando").style.display = "none";
@@ -36,7 +36,7 @@ async function verificarIdentidad() {
     }
 
     try {
-        const res = await fetch("/PAGINA_WEB/php/verificar_identidad.php", {
+        const res = await fetch("/php/verificar_identidad.php", {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: `telefono=${encodeURIComponent(telefono)}&password=${encodeURIComponent(password)}`
@@ -63,7 +63,7 @@ async function verificarIdentidad() {
 // Generar y mostrar el QR
 async function generarQR() {
     try {
-        const res = await fetch("/PAGINA_WEB/php/setup_mfa.php", {
+        const res = await fetch("/php/setup_mfa.php", {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: ""

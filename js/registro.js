@@ -26,7 +26,7 @@ document.querySelector("form").addEventListener("submit", function(e) {
         return;
     }
 
-    fetch("/PAGINA_WEB/php/registro.php", {
+    fetch("/php/registro.php", {
         method: "POST",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"

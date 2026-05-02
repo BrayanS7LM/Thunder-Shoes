@@ -253,7 +253,7 @@ function procesarPago() {
   }
 
   // Enviar al PHP
-  fetch('../php/procesarPago.php', {
+  fetch('/php/procesarPago.php', {
     method:  'POST',
     headers: { 'Content-Type': 'application/json' },
     body:    JSON.stringify(payload)
