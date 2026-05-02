@@ -1,29 +1,23 @@
 <?php
-
-
+ob_start(); // Captura cualquier output inesperado
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
 
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(200); exit; }
+require_once __DIR__ . '/conexion.php';
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['success' => false, 'mensaje' => 'Método no permitido']);
     exit;
 }
 
-// ── Leer body JSON 
-$body = file_get_contents('php://input');
-$data = json_decode($body, true);
-
+$data = json_decode(file_get_contents('php://input'), true);
 if (!$data) {
     echo json_encode(['success' => false, 'mensaje' => 'JSON inválido']);
     exit;
 }
 
-// ── Validar campos obligatorio
-$requeridos = ['nombre', 'email', 'ciudad_envio', 'direccion_envio',
-               'metodo_pago', 'valor_total', 'items'];
+// Validar campos obligatorios
+$requeridos = ['nombre', 'email', 'ciudad_envio', 'talla',
+               'direccion_envio', 'metodo_pago', 'valor_total', 'items'];
 foreach ($requeridos as $campo) {
     if (empty($data[$campo])) {
         echo json_encode(['success' => false, 'mensaje' => "Campo requerido: $campo"]);
@@ -36,184 +30,104 @@ if (!is_array($data['items']) || count($data['items']) === 0) {
     exit;
 }
 
-$metodosValidos = ['tarjeta_credito', 'tarjeta_debito', 'nequi', 'pse', 'efecty'];
-if (!in_array($data['metodo_pago'], $metodosValidos)) {
-    echo json_encode(['success' => false, 'mensaje' => 'Método de pago no válido']);
-    exit;
+// Calcular total en el servidor
+$total = 0.0;
+foreach ($data['items'] as $item) {
+    $total += floatval($item['precio_unitario']) * intval($item['cantidad']);
 }
 
-// ── Conexión BD (reutiliza conexion.php del proyecto) ──────────
-require_once __DIR__ . '/conexion.php';
-// conexion.php debe dejar $pdo disponible (PDO con MariaDB)
+$referencia = 'TS-' . strtoupper(substr(md5(uniqid()), 0, 10));
+
+$conexion->begin_transaction();
 
 try {
+    // 1. Insertar OrdenCliente
+    // Usamos id_usuario = 1 fijo para pruebas (luego lo conectamos a sesión)
+    $id_usuario = 1;
+    $subtotal   = $total;
+    $envio      = 0.00;
+    $telefono   = $data['telefono'] ?? '';
+    $nombre     = $data['nombre'];
+    $email      = $data['email'];
+    $ciudad     = $data['ciudad_envio'];
+    $talla      = $data['talla'];
+    $dir        = $data['direccion_envio'];
 
-    // 1. USUARIO
-    //    Buscar por email. Si no existe, crearlo.
-    //    (El flujo normal es: ya inició sesión, así que existe)
-    // ══════════════════════════════════════════════════════════
-    $stmt = $pdo->prepare(
-        'SELECT id_usuario FROM Usuario WHERE email = :email LIMIT 1'
-    );
-    $stmt->execute([':email' => $data['email']]);
-    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($usuario) {
-        $id_usuario = (int) $usuario['id_usuario'];
-
-        // Actualizar teléfono si llegó y estaba vacío
-        if (!empty($data['telefono'])) {
-            $pdo->prepare(
-                "UPDATE Usuario SET telefono = :tel
-                  WHERE id_usuario = :id
-                    AND (telefono IS NULL OR telefono = '')"
-            )->execute([':tel' => $data['telefono'], ':id' => $id_usuario]);
-        }
-    } else {
-        // Crear usuario mínimo (sin contraseña real — flujo solo si no existe)
-        $pdo->prepare(
-            'INSERT INTO Usuario (nombre, email, password, telefono)
-             VALUES (:nombre, :email, :pwd, :tel)'
-        )->execute([
-            ':nombre' => $data['nombre'],
-            ':email'  => $data['email'],
-            ':pwd'    => password_hash(bin2hex(random_bytes(8)), PASSWORD_BCRYPT),
-            ':tel'    => $data['telefono'] ?? null
-        ]);
-        $id_usuario = (int) $pdo->lastInsertId();
-    }
-
-    // ══════════════════════════════════════════════════════════
-    // 2. CALCULAR TOTAL DESDE EL SERVIDOR
-    //    No confiar ciegamente en el valor que mandó el cliente
-    // ══════════════════════════════════════════════════════════
-    $valor_calculado = 0.0;
-    foreach ($data['items'] as $item) {
-        $valor_calculado += floatval($item['precio_unitario']) * intval($item['cantidad']);
-    }
-    // Tolerancia de 1 COP por posibles redondeos
-    if (abs($valor_calculado - floatval($data['valor_total'])) > 1) {
-        echo json_encode([
-            'success' => false,
-            'mensaje' => 'El total no coincide con los productos. Recarga la página.'
-        ]);
-        exit;
-    }
-
-    // ══════════════════════════════════════════════════════════
-    // 3. INICIAR TRANSACCIÓN
-    // ══════════════════════════════════════════════════════════
-    $pdo->beginTransaction();
-
-    // ══════════════════════════════════════════════════════════
-    // 4. INSERTAR OrdenCliente
-    //    Campos del diagrama ER:
-    //    id_orden (AUTO), id_usuario (FK), fecha (NOW),
-    //    metodo_pago, valor_total,
-    //    ciudad_envio, direccion_envio
-    //    + extras: estado_pago, referencia_pago, fecha_pago
-    // ══════════════════════════════════════════════════════════
-    $referencia = 'TS-' . strtoupper(substr(md5(uniqid($id_usuario . time(), true)), 0, 10));
-
-    $pdo->prepare(
+    $stmt = $conexion->prepare(
         'INSERT INTO OrdenCliente
-           (id_usuario, fecha, metodo_pago, valor_total,
-            ciudad_envio, direccion_envio,
-            estado_pago, referencia_pago, fecha_pago)
-         VALUES
-           (:uid, NOW(), :metodo, :total,
-            :ciudad, :dir,
-            :estado, :ref, NOW())'
-    )->execute([
-        ':uid'    => $id_usuario,
-        ':metodo' => $data['metodo_pago'],
-        ':total'  => $valor_calculado,
-        ':ciudad' => $data['ciudad_envio'],
-        ':dir'    => $data['direccion_envio'],
-        ':estado' => 'aprobado',
-        ':ref'    => $referencia
-    ]);
-
-    $id_orden = (int) $pdo->lastInsertId();
-
-    // ══════════════════════════════════════════════════════════
-    // 5. INSERTAR DetalleOrden por cada producto
-    //    Campos del diagrama ER:
-    //    id_detalle (AUTO), id_orden (FK), id_producto (FK),
-    //    cantidad, precio_unitario
-    // ══════════════════════════════════════════════════════════
-    $stmtDetalle = $pdo->prepare(
-        'INSERT INTO DetalleOrden
-           (id_orden, id_producto, cantidad, precio_unitario)
-         VALUES
-           (:id_orden, :id_producto, :cantidad, :precio)'
+           (id_usuario, nombre_envio, email_envio, telefono_envio,
+            ciudad_envio, talla_envio, direccion_envio,
+            subtotal, envio, valor_total, estado)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "pagado")'
     );
+    $stmt->bind_param('issssssdd' . 'd',
+        $id_usuario,
+        $nombre, $email, $telefono,
+        $ciudad, $talla, $dir,
+        $subtotal, $envio, $total
+    );
+    $stmt->execute();
+    $id_orden = (int) $conexion->insert_id;
+    $stmt->close();
 
+    // 2. Insertar PagoOrden
+    $metodo        = $data['metodo_pago'];
+    $pse_banco     = $data['pse_banco']        ?? null;
+    $pse_tipo_pers = $data['pse_tipo_persona'] ?? null;
+    $pse_tipo_doc  = $data['pse_tipo_doc']     ?? null;
+    $pse_num_doc   = $data['pse_numero_doc']   ?? null;
+    $tar_numero    = $data['tarjeta_numero']   ?? null;
+    $tar_titular   = $data['tarjeta_titular']  ?? null;
+    $tar_vence     = $data['tarjeta_vence']    ?? null;
+    $tar_cuotas    = isset($data['tarjeta_cuotas']) ? (int)$data['tarjeta_cuotas'] : null;
+
+    $stmt2 = $conexion->prepare(
+        'INSERT INTO PagoOrden
+           (id_orden, metodo_pago, estado_pago,
+            pse_banco, pse_tipo_persona, pse_tipo_doc, pse_numero_doc,
+            tarjeta_numero, tarjeta_titular, tarjeta_vence, tarjeta_cuotas)
+         VALUES (?, ?, "aprobado", ?, ?, ?, ?, ?, ?, ?, ?)'
+    );
+    $stmt2->bind_param('issssssssi',
+        $id_orden, $metodo,
+        $pse_banco, $pse_tipo_pers, $pse_tipo_doc, $pse_num_doc,
+        $tar_numero, $tar_titular, $tar_vence, $tar_cuotas
+    );
+    $stmt2->execute();
+    $stmt2->close();
+
+    // 3. Insertar DetalleOrden
+    $stmt3 = $conexion->prepare(
+        'INSERT INTO DetalleOrden (id_orden, id_producto, cantidad, precio_unitario)
+         VALUES (?, ?, ?, ?)'
+    );
     foreach ($data['items'] as $item) {
-        $id_producto     = !empty($item['id_producto']) ? (int) $item['id_producto'] : null;
-        $cantidad        = max(1, (int) $item['cantidad']);
-        $precio_unitario = floatval($item['precio_unitario']);
-
-        // Si el producto tiene id, verificar stock y descontarlo
-        if ($id_producto) {
-            $stmtProd = $pdo->prepare(
-                'SELECT stock FROM Producto WHERE id_producto = :id FOR UPDATE'
-            );
-            $stmtProd->execute([':id' => $id_producto]);
-            $prod = $stmtProd->fetch(PDO::FETCH_ASSOC);
-
-            if (!$prod) {
-                $pdo->rollBack();
-                echo json_encode([
-                    'success' => false,
-                    'mensaje' => 'El producto #' . $id_producto . ' no existe.'
-                ]);
-                exit;
-            }
-            if ((int) $prod['stock'] < $cantidad) {
-                $pdo->rollBack();
-                echo json_encode([
-                    'success' => false,
-                    'mensaje' => 'Stock insuficiente para "' . htmlspecialchars($item['nombre']) . '".'
-                ]);
-                exit;
-            }
-            // Descontar stock
-            $pdo->prepare(
-                'UPDATE Producto SET stock = stock - :cant WHERE id_producto = :id'
-            )->execute([':cant' => $cantidad, ':id' => $id_producto]);
-        }
-
-        $stmtDetalle->execute([
-            ':id_orden'    => $id_orden,
-            ':id_producto' => $id_producto,
-            ':cantidad'    => $cantidad,
-            ':precio'      => $precio_unitario
-        ]);
+        $id_prod = !empty($item['id_producto']) ? (int)$item['id_producto'] : null;
+        $cant    = max(1, (int)$item['cantidad']);
+        $precio  = floatval($item['precio_unitario']);
+        $stmt3->bind_param('iiid', $id_orden, $id_prod, $cant, $precio);
+        $stmt3->execute();
     }
+    $stmt3->close();
 
-    // ══════════════════════════════════════════════════════════
-    // 6. CONFIRMAR TRANSACCIÓN
-    // ══════════════════════════════════════════════════════════
-    $pdo->commit();
+    $conexion->commit();
 
-    // ══════════════════════════════════════════════════════════
-    // 7. RESPUESTA EXITOSA
-    // ══════════════════════════════════════════════════════════
+    ob_end_clean(); // Limpiar cualquier output antes del JSON
     echo json_encode([
         'success'    => true,
-        'mensaje'    => 'Pago procesado correctamente',
         'referencia' => $referencia,
         'id_orden'   => $id_orden,
-        'id_usuario' => $id_usuario,
-        'total'      => $valor_calculado
+        'total'      => $total
     ]);
 
-} catch (PDOException $e) {
-    if ($pdo->inTransaction()) $pdo->rollBack();
-    error_log('[Thunder Shoes] Error BD: ' . $e->getMessage());
+} catch (Exception $e) {
+    $conexion->rollback();
+    ob_end_clean();
+    error_log('[ThunderShoes] ' . $e->getMessage());
     echo json_encode([
         'success' => false,
-        'mensaje' => 'Error interno del servidor. Intenta de nuevo.'
+        'mensaje' => 'Error: ' . $e->getMessage()
     ]);
+} finally {
+    $conexion->close();
 }

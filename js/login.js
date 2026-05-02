@@ -13,7 +13,7 @@ document.querySelector(".form-inicio-sesion").addEventListener("submit", functio
     .then(data => {
         if (data.startsWith("OK:")) {
             const nombre = data.split(":")[1];
-            localStorage.setItem("usuarioActivo", nombre);
+            localStorage.setItem("usuarioActivo", JSON.stringify({ nombre: nombre, email: email }));
             alert("¡Bienvenido, " + nombre + "!");
             window.location.href = "../pages/cliente.html";
 
