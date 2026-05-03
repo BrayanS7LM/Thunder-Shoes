@@ -1,0 +1,152 @@
+:root {
+    --primario: #011526;
+    --secundario: #022840;
+    --acento: #f2c12e;
+    --texto: #333;
+    --gris-fondo: #f8f9fa;
+    --blanco: #ffffff;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    margin: 0;
+    background-color: var(--gris-fondo);
+    color: var(--texto);
+}
+
+/* Hero Section */
+.ayuda-hero {
+    background-color: var(--primario);
+    color: var(--blanco);
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.ayuda-hero h1 {
+    font-family: 'Montserrat', sans-serif;
+    margin-bottom: 20px;
+}
+
+.buscador-container input {
+    width: 100%;
+    max-width: 500px;
+    padding: 15px 20px;
+    border-radius: 30px;
+    border: none;
+    font-size: 1rem;
+    outline: none;
+}
+
+/* Layout */
+.container {
+    max-width: 1000px;
+    margin: -40px auto 40px;
+    padding: 0 20px;
+}
+
+/* Tarjetas de Ayuda */
+.ayuda-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 50px;
+}
+
+.ayuda-card {
+    background: var(--blanco);
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease;
+}
+
+.ayuda-card:hover {
+    transform: translateY(-5px);
+}
+
+.ayuda-card .icon {
+    font-size: 40px;
+    margin-bottom: 15px;
+}
+
+.ayuda-card a {
+    color: var(--acento);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+/* Tabla de Tallas */
+.seccion-tallas {
+    background: var(--blanco);
+    padding: 40px;
+    border-radius: 12px;
+    margin-bottom: 40px;
+}
+
+.tabla-scroll {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th, table td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+table th {
+    background-color: var(--primario);
+    color: var(--blanco);
+}
+
+/* FAQ (Acordeón Nativo) */
+.faq-section h2 {
+    margin-bottom: 20px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.faq-item {
+    background: var(--blanco);
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.faq-item summary {
+    font-weight: 600;
+    outline: none;
+}
+
+.faq-item p {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* Footer Ayuda */
+.ayuda-footer {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.btn-volver {
+    display: inline-block;
+    margin-top: 20px;
+    color: var(--primario);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .container { margin-top: 20px; }
+    .seccion-tallas { padding: 20px; }
+}
