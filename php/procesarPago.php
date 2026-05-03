@@ -1,5 +1,5 @@
 <?php
-ob_start(); // Captura cualquier output inesperado
+ob_start();
 header('Content-Type: application/json; charset=utf-8');
 
 require_once __DIR__ . '/conexion.php';
@@ -30,7 +30,29 @@ if (!is_array($data['items']) || count($data['items']) === 0) {
     exit;
 }
 
-// Calcular total en el servidor
+// ── Funciones de seguridad ─────────────────────────────────────
+
+// Enmascara tarjeta: "4564678975687987" → "**** **** **** 7987"
+function enmascararTarjeta($numero) {
+    if (empty($numero)) return null;
+    $limpio = preg_replace('/\s+/', '', $numero); // quitar espacios
+    $ultimos4 = substr($limpio, -4);
+    return '**** **** **** ' . $ultimos4;
+}
+
+// Encripta datos sensibles con AES-256
+// La clave se define aquí — en producción iría en variable de entorno
+define('CLAVE_ENCRIPTAR', 'ThunderShoes2025$SecretKey#32Chr');
+
+function encriptar($texto) {
+    if (empty($texto)) return null;
+    $iv     = random_bytes(16);
+    $cifrado = openssl_encrypt($texto, 'AES-256-CBC', CLAVE_ENCRIPTAR, 0, $iv);
+    // Guardamos iv + cifrado juntos en base64
+    return base64_encode($iv . '::' . $cifrado);
+}
+
+// ── Calcular total ─────────────────────────────────────────────
 $total = 0.0;
 foreach ($data['items'] as $item) {
     $total += floatval($item['precio_unitario']) * intval($item['cantidad']);
@@ -42,8 +64,7 @@ $conexion->begin_transaction();
 
 try {
     // 1. Insertar OrdenCliente
-    // Usamos id_usuario = 1 fijo para pruebas (luego lo conectamos a sesión)
-    $id_usuario = 1;
+    $id_usuario = 1; // fijo para pruebas
     $subtotal   = $total;
     $envio      = 0.00;
     $telefono   = $data['telefono'] ?? '';
@@ -60,7 +81,7 @@ try {
             subtotal, envio, valor_total, estado)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "pagado")'
     );
-    $stmt->bind_param('issssssdd' . 'd',
+    $stmt->bind_param('issssssddd',
         $id_usuario,
         $nombre, $email, $telefono,
         $ciudad, $talla, $dir,
@@ -70,16 +91,34 @@ try {
     $id_orden = (int) $conexion->insert_id;
     $stmt->close();
 
-    // 2. Insertar PagoOrden
+    // 2. Insertar PagoOrden con datos protegidos
     $metodo        = $data['metodo_pago'];
     $pse_banco     = $data['pse_banco']        ?? null;
     $pse_tipo_pers = $data['pse_tipo_persona'] ?? null;
     $pse_tipo_doc  = $data['pse_tipo_doc']     ?? null;
-    $pse_num_doc   = $data['pse_numero_doc']   ?? null;
-    $tar_numero    = $data['tarjeta_numero']   ?? null;
-    $tar_titular   = $data['tarjeta_titular']  ?? null;
-    $tar_vence     = $data['tarjeta_vence']    ?? null;
-    $tar_cuotas    = isset($data['tarjeta_cuotas']) ? (int)$data['tarjeta_cuotas'] : null;
+
+    // Número de documento PSE — encriptado
+    $pse_num_doc = isset($data['pse_numero_doc'])
+        ? encriptar($data['pse_numero_doc'])
+        : null;
+
+    // Número de tarjeta — solo guardamos últimos 4 dígitos
+    $tar_numero = isset($data['tarjeta_numero'])
+        ? enmascararTarjeta($data['tarjeta_numero'])
+        : null;
+
+    // Titular — se guarda normal (no es dato crítico)
+    $tar_titular = $data['tarjeta_titular'] ?? null;
+
+    // Vencimiento — encriptado
+    $tar_vence = isset($data['tarjeta_vence'])
+        ? encriptar($data['tarjeta_vence'])
+        : null;
+
+    // CVV — NUNCA se guarda (ni encriptado), se descarta aquí
+    // $data['tarjeta_cvv'] se ignora completamente
+
+    $tar_cuotas = isset($data['tarjeta_cuotas']) ? (int)$data['tarjeta_cuotas'] : null;
 
     $stmt2 = $conexion->prepare(
         'INSERT INTO PagoOrden
@@ -112,7 +151,7 @@ try {
 
     $conexion->commit();
 
-    ob_end_clean(); // Limpiar cualquier output antes del JSON
+    ob_end_clean();
     echo json_encode([
         'success'    => true,
         'referencia' => $referencia,

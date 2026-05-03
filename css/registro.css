@@ -365,6 +365,14 @@ section {
     top: 45px;
     color: #888;
   }
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 45px;
+    color: #888;
+    cursor: pointer;
+}
   
   .checkbox-group {
     margin-bottom: 20px;

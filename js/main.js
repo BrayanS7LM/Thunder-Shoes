@@ -1,13 +1,6 @@
 /**
  * main.js — Thunder Shoes
  * Carrito de compras.
- * Guarda en localStorage['carritoThunder'] con la estructura:
- * [{ id_producto, nombre, precio, cantidad }]
- * que leen pago.js y procesarPago.php
- *
- * CAMBIOS:
- *  1. Verificar sesión activa antes de añadir al carrito.
- *  2. Si no hay sesión, mostrar mensaje en el dropdown invitando a iniciar sesión.
  */
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -43,9 +36,6 @@ document.addEventListener('DOMContentLoaded', function () {
   botonesAnadir.forEach(function (boton) {
     boton.addEventListener('click', function () {
 
-      // ── VERIFICAR SESIÓN ACTIVA ────────────────────────────
-      // login.js guarda el nombre como string plano: localStorage.setItem("usuarioActivo", nombre)
-      // Se maneja tanto string plano como objeto JSON por compatibilidad
       var sesionRaw = localStorage.getItem('usuarioActivo');
       var usuarioActivo = null;
       if (sesionRaw) {
@@ -53,37 +43,29 @@ document.addEventListener('DOMContentLoaded', function () {
           var parsed = JSON.parse(sesionRaw);
           usuarioActivo = parsed;
         } catch (e) {
-          usuarioActivo = { nombre: sesionRaw }; // string plano "Juan" -> hay sesion activa
+          usuarioActivo = { nombre: sesionRaw };
         }
       }
 
       if (!usuarioActivo) {
-        // Abrir el dropdown y mostrar aviso de login
-        carritoAbierto = true;
-        carritoEl.classList.add('active');
         mostrarAvisoLogin();
-        return; // No agregar al carrito
+        return;
       }
-      // ──────────────────────────────────────────────────────
 
       var galeria = this.closest('.galeria');
 
-      // Nombre del producto
       var liNombre = galeria.querySelector('li:first-child');
       var nombre   = liNombre.querySelector('strong')
                       ? liNombre.querySelector('strong').textContent.trim()
                       : liNombre.textContent.trim();
 
-      // Precio (solo dígitos del último <li>)
       var precioTexto = galeria.querySelector('li:last-child').textContent;
       var precio      = parseInt(precioTexto.replace(/[^\d]/g, ''), 10) || 0;
 
-      // id_producto desde data-id del boton o galeria
       var idProducto = parseInt(boton.dataset.id || galeria.dataset.id) || null;
 
       agregarItem(idProducto, nombre, precio);
 
-      // Feedback sin alert bloqueante
       var textoOriginal = boton.textContent;
       boton.textContent = '¡Agregado!';
       boton.disabled = true;
@@ -94,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  // ── Finalizar compra → pasarela de pago ───────────────────
+  // ── Finalizar compra ───────────────────────────────────────
   if (botonCheckout) {
     botonCheckout.addEventListener('click', function () {
       if (carritoData.length === 0) {
@@ -102,7 +84,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
       guardarEnStorage();
-      // Detectar si estamos en /pages/ o en la raíz para usar la ruta correcta
       var enPages = window.location.pathname.includes('/pages/');
       window.location.href = enPages ? 'pago.html' : 'pages/pago.html';
     });
@@ -140,7 +121,6 @@ document.addEventListener('DOMContentLoaded', function () {
     return carritoData.reduce(function (s, it) { return s + it.precio * it.cantidad; }, 0);
   }
 
-  // ── localStorage ───────────────────────────────────────────
   function guardarEnStorage() {
     localStorage.setItem('carritoThunder', JSON.stringify(carritoData));
   }
@@ -152,28 +132,43 @@ document.addEventListener('DOMContentLoaded', function () {
     } catch (e) { return []; }
   }
 
-  // ── Aviso de login en el dropdown ─────────────────────────
+  // ── Modal aviso de login ───────────────────────────────────
   function mostrarAvisoLogin() {
-    var contenedor = document.querySelector('.carrito-items');
-    var totalSpan  = document.querySelector('.carrito-total span:last-child');
-    if (!contenedor) return;
+    var previo = document.getElementById('modal-login-aviso');
+    if (previo) previo.remove();
 
-    contenedor.innerHTML = '';
-    var aviso = document.createElement('div');
-    aviso.className = 'carrito-vacio';
-    aviso.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:10px;padding:12px 0;';
-    aviso.innerHTML =
-      '<span style="font-size:28px">🔒</span>' +
-      '<span style="font-weight:600;color:#333">Inicia sesión para comprar</span>' +
-      '<span style="font-size:13px;color:#777;text-align:center">Debes tener una cuenta activa para agregar productos al carrito.</span>' +
-      '<a href="pages/login.html" style="' +
-        'margin-top:6px;padding:9px 22px;background:#000;color:#fff;' +
-        'border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;' +
-        'transition:background 0.2s;" ' +
-        'onmouseover="this.style.background=\'#333\'" ' +
-        'onmouseout="this.style.background=\'#000\'">Iniciar sesión</a>';
-    contenedor.appendChild(aviso);
-    if (totalSpan) totalSpan.textContent = '$0';
+    var linkLogin = window.location.pathname.includes('/pages/')
+      ? 'login.html'
+      : 'pages/login.html';
+
+    var modal = document.createElement('div');
+    modal.id = 'modal-login-aviso';
+    modal.style.cssText =
+      'position:fixed;top:0;left:0;width:100%;height:100%;' +
+      'background:rgba(0,0,0,0.5);z-index:9999;' +
+      'display:flex;align-items:center;justify-content:center;';
+
+    modal.innerHTML =
+      '<div style="background:#fff;border-radius:12px;padding:40px 32px;' +
+      'max-width:380px;width:90%;text-align:center;' +
+      'box-shadow:0 10px 40px rgba(0,0,0,0.2);">' +
+        '<div style="font-size:50px;margin-bottom:16px;">🔒</div>' + 
+        '<p style="...">Debes iniciar sesión primero para poder comprar tus Thunder Shoes.</p>' +
+        '<div style="display:flex;gap:10px;justify-content:center;">' +
+          '<a href="' + linkLogin + '" ' +
+          'style="background:#011526;color:#fff;padding:11px 24px;border-radius:6px;' +
+          'text-decoration:none;font-size:14px;font-weight:600;">Iniciar sesión</a>' +
+          '<button onclick="document.getElementById(\'modal-login-aviso\').remove()" ' +
+          'style="background:#f0f0f0;color:#333;padding:11px 24px;border-radius:6px;' +
+          'border:none;cursor:pointer;font-size:14px;font-weight:600;">Cancelar</button>' +
+        '</div>' +
+      '</div>';
+
+    modal.addEventListener('click', function (e) {
+      if (e.target === modal) modal.remove();
+    });
+
+    document.body.appendChild(modal);
   }
 
   // ── Render dropdown ────────────────────────────────────────

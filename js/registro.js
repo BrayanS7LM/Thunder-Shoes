@@ -18,9 +18,13 @@ document.querySelector("form").addEventListener("submit", function(e) {
         return;
     }
 
+    if (password.length < 8) {
+        alert("La contraseña debe tener mínimo 8 caracteres.");
+        return;
+    }
+
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    
     if (!emailPattern.test(email)) {
         alert("Por favor, ingrese un email válido.");
         return;
@@ -37,7 +41,6 @@ document.querySelector("form").addEventListener("submit", function(e) {
     .then(data => {
         switch(data.trim()) {
             case "OK":
-                // ✅ Ir a vincular Google Authenticator antes del login
                 window.location.href = "setup_mfa.html";
                 break;
             case "EXISTE":
@@ -60,4 +63,30 @@ document.querySelector("form").addEventListener("submit", function(e) {
         console.error(err);
         alert("Error de conexión. Verifica que el servidor esté activo.");
     });
+});
+
+
+// 👁️ Mostrar / ocultar contraseña principal
+const togglePassword = document.getElementById("togglePassword");
+const passwordInput = document.getElementById("password-registro");
+
+togglePassword.addEventListener("click", () => {
+    const type = passwordInput.type === "password" ? "text" : "password";
+    passwordInput.type = type;
+
+    togglePassword.classList.toggle("fa-eye");
+    togglePassword.classList.toggle("fa-eye-slash");
+});
+
+
+// 👁️ Mostrar / ocultar confirmar contraseña
+const toggleConfirmar = document.getElementById("toggleConfirmar");
+const confirmarInput = document.getElementById("confirmar-password");
+
+toggleConfirmar.addEventListener("click", () => {
+    const type = confirmarInput.type === "password" ? "text" : "password";
+    confirmarInput.type = type;
+
+    toggleConfirmar.classList.toggle("fa-eye");
+    toggleConfirmar.classList.toggle("fa-eye-slash");
 });

@@ -1,8 +1,8 @@
 document.querySelector(".form-inicio-sesion").addEventListener("submit", function(e) {
     e.preventDefault();
 
-    const email    = document.getElementById("email-registro").value.trim();
-    const password = document.getElementById("password-registro").value;
+    const email    = document.getElementById("email-login").value.trim();
+    const password = document.getElementById("password-login").value;
 
     fetch("/php/login.php", {
         method: "POST",
@@ -32,3 +32,16 @@ document.querySelector(".form-inicio-sesion").addEventListener("submit", functio
         alert("Error de conexión.");
     });
 });
+
+const toggleLogin = document.getElementById("toggleLogin");
+const passwordInput = document.getElementById("password-login");
+
+if (toggleLogin && passwordInput) {
+    toggleLogin.addEventListener("click", () => {
+        const tipo = passwordInput.type === "password" ? "text" : "password";
+        passwordInput.type = tipo;
+
+        toggleLogin.classList.toggle("fa-eye");
+        toggleLogin.classList.toggle("fa-eye-slash");
+    });
+}
