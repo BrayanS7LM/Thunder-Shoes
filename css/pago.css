@@ -28,9 +28,9 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
+  font-family: 'Montserrat', sans-serif;
   background: var(--bg);
   color: var(--text);
-  font-family: 'DM Sans', sans-serif;
   font-size: 15px;
   line-height: 1.6;
   min-height: 100vh;
@@ -68,9 +68,10 @@ nav {
 
 .titulo {
     font-size: 1.5rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    color: #fff;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
 }
 
 .nav-links {
@@ -99,16 +100,7 @@ nav {
     color: #f0c040;
 }
 
-.brand {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 800;
-  font-size: 20px;
-  letter-spacing: 2px;
-  color: var(--green);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+
 
 .brand-icon {
   width: 34px; height: 34px;
